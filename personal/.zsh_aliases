@@ -1,0 +1,59 @@
+# Directories
+alias cdl="cd ~/local"
+alias cdd="cd ~/local/dev"
+alias cdv="cd ~/local/backups/vaults"
+alias cdbj="cd /tmp/bluejay/vlt"
+
+# Utils
+alias ds="du -cksh * | sort -hr"
+alias l='ls -alsh'
+
+alias tma='tmux attach'
+alias tmad='tmux a -d'
+
+alias gst='git status'
+alias gb='git branch -vv'
+alias greb='git rebase -i HEAD~10'
+alias grebc='git rebase --continue'
+alias gsub='git submodule update --init --recursive'
+
+setopt sh_word_split
+# <cmd> <cmd_modifiers> <key> <opt_modifiers> <pager>
+function custom_page() {
+    local IFS="|"
+    $1 $2 $3 $4 | $5
+}
+
+# only 1 key allowed
+# multiple options allowed
+function custom_parse() {
+    local cmd="$1"
+    local cmd_modifiers="$2"
+    local pager="$3"
+    local key=""
+    local opt=""
+    shift 3
+    if [ "$#" -gt 0 ]; then
+        key="$1"
+        local IFS="|"
+        if [ "${key:0:1}" = "-" ]; then
+            key=""
+            opt="$*"
+        else
+            shift 1
+            opt="$*"
+        fi
+    fi
+    custom_page "$cmd" "$cmd_modifiers" "$key" "$opt" "$pager"
+}
+
+alias rip='custom_parse "rg|-n|-C2" "--color=always" "less|-R" '
+alias glo='custom_parse "git|log" "--graph|--pretty=format:%C(red)%h%Creset %C(bold blue)(%cr) %C(magenta)<%an>%Creset %s %C(yellow)%d%Creset|--abbrev-commit|--color=always" "less|-R" '
+alias glf='custom_parse "git|log" "--graph|--abbrev-commit|--color=always" "less|-R" '
+alias  gs='custom_parse "git|show" "--color=always" "less|-R" '
+
+alias vim='nvim'
+alias nv='nvim'
+alias nvc='nvim ~/.config/nvim/init.lua'
+
+alias python='/usr/bin/python3.8'
